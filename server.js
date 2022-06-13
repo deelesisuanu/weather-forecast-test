@@ -10,15 +10,9 @@ const app = require("./app");
 
 const db = require("./models");
 
-if (process.env.IS_TEST && Boolean(process.env.IS_TEST)) {
-  db.sequelize.sync();
-}
-else {
-  console.log("am here");
-  db.sequelize.sync({ force: true }).then(() => {
-    console.log("Drop and re-sync db.");
-  });
-}
+db.sequelize.sync({ force: true }).then(() => {
+  console.log("Drop and re-sync db.");
+});
 
 const port = process.env.PORT || 4000;
 const server = app.listen(port, () => {

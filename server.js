@@ -9,25 +9,16 @@ process.on("uncaughtException", (err) => {
 const app = require("./app");
 
 const db = require("./models");
-// console.log(db);
-// db.sequelize.sync();
-db.sequelize.sync({ force: true }).then(() => {
-  console.log("Drop and re-sync db.");
-});
 
-// const dbConnect = `mongodb+srv://${process.env.MONGO_USER}:${process.env.MONGO_PASS}@cluster0.gk4wf.mongodb.net/fashionStores?retryWrites=true&w=majority`;
-
-// console.log("Connecting.... ", dbConnect)
-
-// mongoose.connect(dbConnect, {
-//   useNewUrlParser: true,
-//   useCreateIndex: true,
-//   useFindAndModify: false,
-//   useUnifiedTopology: true,
-//   serverSelectionTimeoutMS: 15000
-// }).then(() => console.log("DB connection successful!")).catch((err) => {
-//   console.log(err)
-// });
+if (process.env.IS_TEST && Boolean(process.env.IS_TEST)) {
+  db.sequelize.sync();
+}
+else {
+  console.log("am here");
+  db.sequelize.sync({ force: true }).then(() => {
+    console.log("Drop and re-sync db.");
+  });
+}
 
 const port = process.env.PORT || 4000;
 const server = app.listen(port, () => {
@@ -48,3 +39,5 @@ process.on("SIGTERM", () => {
     console.log("💥 Process terminated!");
   });
 });
+
+module.exports = server;
